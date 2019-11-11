@@ -1,8 +1,18 @@
+<! DOCTYPE html>
 <html>
+	<head>
+
+	</head>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
     <body onload="init()">
         <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-		<input type = "button" value = "Save" size= "23" onclick="saveImg()" style = "position:absolute; top:80%; left: 10%"/>
-		<input type = "button" value = "Clear" size= "25" onclick="erase()" style = "position:absolute; top:80%; left: 15%"/>
+    
+	<p id = "prediction-text" style = "position:absolute; top:90%; left: 15%">predictions: </p>
+		<button id="predict-button" class="btn btn-dark" style = "position:absolute; top:80%; left: 15%">Predict</button>
+		<input type = "button" value = "Clear" size= "25" onclick="erase()" style = "position:absolute; top:80%; left: 10%"/>
+
     </body>
     <script type="text/javascript">
 		var canvas, ctx, isDragging = false;
@@ -79,15 +89,66 @@
 			}
 		}
 		
-		function saveImg()
-		{
-			var data = ctx.getImageData(0, 0, 400, 400);
-		}
+	$("#predict-button").click(async function () {
+		// get image data from canvas
+		console.log("in predict function")
+		var imageData = canvas.toDataURL();
+	
+		// preprocess canvas
+		let tensor = preprocessCanvas(canvas);
+	
+		// make predictions on the preprocessed image tensor
+		let predictions = await model.predict(tensor).data();
+	
+		// get the model's prediction results
+		let results = Array.from(predictions);
+	
+		displayLabel(results)
+		// display the predictions in chart
+		console.log(results)
+	});
 		
 		function erase()
 		{
+			console.log("erase button clicked");
 			ctx.clearRect(0, 0, w, h);
 
 		}
-    </script>
+
+		async function loadModel() {
+			console.log("in load model function")
+			// clear the model variable
+			model = undefined; 
+			// load the model using a HTTPS request (where you have stored your model files)
+			model = await tf.loadLayersModel("/models/model.json");
+		}
+ 
+		loadModel();
+
+		function preprocessCanvas(image) {
+			// resize the input image to target size of (1, 28, 28)
+			let tensor = tf.browser.fromPixels(image)
+				.resizeNearestNeighbor([28, 28])
+				.mean(2)
+				.expandDims(2)
+				.expandDims()
+				.toFloat();
+			return tensor.div(255.0);
+		}
+
+		function displayLabel(data) {
+    var max = data[0];
+    var maxIndex = 0;
+ 
+    for (var i = 1; i < data.length; i++) {
+        if (data[i] > max) {
+            maxIndex = i;
+            max = data[i];
+        }
+    }
+    $("prediction-text").html("Predicting you draw <b>"+maxIndex+"</b> with <b>"+Math.trunc( max*100 )+"%</b> confidence")
+}
+	</script>
+	
+	
 </html>
