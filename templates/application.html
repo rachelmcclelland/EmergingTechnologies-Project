@@ -6,121 +6,204 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
 
-    <body onload="init()">
-        <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-    
-	<p id = "prediction-text" style = "position:absolute; top:90%; left: 15%">predictions: </p>
+	<!-- Adapted from https://bensonruan.com/handwritten-digit-recognition-with-tensorflow-js/ -->
+    <body>
+        <!-- <canvas id="can" width="200" height="200" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas> -->
+
+		<div id="canvas_box" class="canvas-box"></div>
 		<button id="predict-button" class="btn btn-dark" style = "position:absolute; top:80%; left: 15%">Predict</button>
-		<input type = "button" value = "Clear" size= "25" onclick="erase()" style = "position:absolute; top:80%; left: 10%"/>
+		<button id="clear-button" style = "position:absolute; top:80%; left: 10%">Clear</button>
+
+		<p id = "prediction-text" style = "position:absolute; top:90%; left: 15%">Predictions:  </p>
 
     </body>
-    <script type="text/javascript">
-		var canvas, ctx, isDragging = false;
-		var	previousX = 0;
-		var previousY = 0;
-		var currentX = 0;
-		var currentY = 0,
-			dot_flag = false;
+	<script type="text/javascript">
+		let model;
+		var canvasWidth = 250;
+		var canvasHeight = 250;
+		var canvasStrokeStyle = "red";
+		var canvasLineJoin = "round";
+		var canvasLineWidth = 10;
+		var canvasBackgroundColor = "black";
+		var canvasId = "canvas";
+		var clickX = new Array();
+		var clickY = new Array();
+		var clickD = new Array();
+		var drawing;
 
 		var x = "black";
 		// variable for how think the line is
 		var lineThickness = 3;
-	   
-		function init() {
-			canvas = document.getElementById('can');
-			ctx = canvas.getContext("2d");
-			w = canvas.width;
-			h = canvas.height;
-	   
-			canvas.addEventListener("mousemove", function (e) {
-				findxy('move', e)
-			}, false);
-			canvas.addEventListener("mousedown", function (e) {
-				findxy('down', e)
-			}, false);
-			canvas.addEventListener("mouseup", function (e) {
-				findxy('up', e)
-			}, false);
-			canvas.addEventListener("mouseout", function (e) {
-				findxy('out', e)
-			}, false);
+		var canvasBox = document.getElementById('canvas_box');
+		var canvas    = document.createElement("canvas");
+		
+		canvas.setAttribute("width", canvasWidth);
+		canvas.setAttribute("height", canvasHeight);
+		canvas.setAttribute("id", canvasId);
+		canvas.style.backgroundColor = canvasBackgroundColor;
+		canvasBox.appendChild(canvas);
+
+		// checks is browser supports html 
+		if(typeof G_vmlCanvasManager != 'undefined') {
+			canvas = G_vmlCanvasManager.initElement(canvas);
 		}
-	   
-		// draw the line
-		function draw() {
-			ctx.beginPath();
-			ctx.moveTo(previousX, previousY);
-			ctx.lineTo(currentX, currentY);
-			ctx.strokeStyle = x;
-			ctx.lineWidth = lineThickness;
-			ctx.stroke();
-			ctx.closePath();
+ 
+		ctx = canvas.getContext("2d");
+			
+		$("#canvas").mousedown(function(e) {
+			var rect = canvas.getBoundingClientRect();
+			var mouseX = e.clientX- rect.left;;
+			var mouseY = e.clientY- rect.top;
+			drawing = true;
+			addUserGesture(mouseX, mouseY);
+			drawOnCanvas();
+		});
+ 
+		canvas.addEventListener("touchstart", function (e) {
+			if (e.target == canvas) {
+				e.preventDefault();
+			}
+		
+			var rect = canvas.getBoundingClientRect();
+			var touch = e.touches[0];
+		
+			var mouseX = touch.clientX - rect.left;
+			var mouseY = touch.clientY - rect.top;
+		
+			drawing = true;
+			addUserGesture(mouseX, mouseY);
+			drawOnCanvas();
+		
+		}, false);
+ 
+
+		$("#canvas").mousemove(function(e) {
+			if(drawing) {
+				var rect = canvas.getBoundingClientRect();
+				var mouseX = e.clientX- rect.left;;
+				var mouseY = e.clientY- rect.top;
+				addUserGesture(mouseX, mouseY, true);
+				drawOnCanvas();
+			}
+		});
+
+		canvas.addEventListener("touchmove", function (e) {
+			if (e.target == canvas) {
+				e.preventDefault();
+			}
+			if(drawing) {
+				var rect = canvas.getBoundingClientRect();
+				var touch = e.touches[0];
+		
+				var mouseX = touch.clientX - rect.left;
+				var mouseY = touch.clientY - rect.top;
+		
+				addUserGesture(mouseX, mouseY, true);
+				drawOnCanvas();
+			}
+		}, false);
+		
+		//-------------------
+		// MOUSE UP function
+		//-------------------
+		$("#canvas").mouseup(function(e) {
+			drawing = false;
+		});
+		
+		//---------------------
+		// TOUCH END function
+		//---------------------
+		canvas.addEventListener("touchend", function (e) {
+			if (e.target == canvas) {
+				e.preventDefault();
+			}
+			drawing = false;
+		}, false);
+		
+		//----------------------
+		// MOUSE LEAVE function
+		//----------------------
+		$("#canvas").mouseleave(function(e) {
+			drawing = false;
+		});
+		
+		//-----------------------
+		// TOUCH LEAVE function
+		//-----------------------
+		canvas.addEventListener("touchleave", function (e) {
+			if (e.target == canvas) {
+				e.preventDefault();
+			}
+			drawing = false;
+		}, false);
+		
+		//--------------------
+		// ADD CLICK function
+		//--------------------
+		function addUserGesture(x, y, dragging) {
+			clickX.push(x);
+			clickY.push(y);
+			clickD.push(dragging);
 		}
-	   
-		//get mouse coordinates relative to the canvas
-		function findxy(res, e) {
-			if (res == 'down') {
-				previousX = currentX;
-				previousY = currentY;
-				currentX = e.clientX - canvas.offsetLeft;
-				currentY = e.clientY - canvas.offsetTop;
-	   
-				isDragging = true;
-				dot_flag = true;
-				if (dot_flag) {
-					ctx.beginPath();
-					ctx.fillStyle = x;
-					ctx.fillRect(currentX, currentY, 2, 2);
-					ctx.closePath();
-					dot_flag = false;
+		
+		//-------------------
+		// RE DRAW function
+		//-------------------
+		function drawOnCanvas() {
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+		
+			ctx.strokeStyle = canvasStrokeStyle;
+			ctx.lineJoin    = canvasLineJoin;
+			ctx.lineWidth   = canvasLineWidth;
+		
+			for (var i = 0; i < clickX.length; i++) {
+				ctx.beginPath();
+				if(clickD[i] && i) {
+					ctx.moveTo(clickX[i-1], clickY[i-1]);
+				} else {
+					ctx.moveTo(clickX[i]-1, clickY[i]);
 				}
-			}
-			if (res == 'up' || res == "out") {
-				isDragging = false;
-			}
-			if (res == 'move') {
-				if (isDragging) {
-					previousX = currentX;
-					previousY = currentY;
-					currentX = e.clientX - canvas.offsetLeft;
-					currentY = e.clientY - canvas.offsetTop;
-					draw();
-				}
+				ctx.lineTo(clickX[i], clickY[i]);
+				ctx.closePath();
+				ctx.stroke();
 			}
 		}
 		
-	$("#predict-button").click(async function () {
-		// get image data from canvas
-		console.log("in predict function")
-		var imageData = canvas.toDataURL();
-	
-		// preprocess canvas
-		let tensor = preprocessCanvas(canvas);
-	
-		// make predictions on the preprocessed image tensor
-		let predictions = await model.predict(tensor).data();
-	
-		// get the model's prediction results
-		let results = Array.from(predictions);
-	
-		displayLabel(results)
-		// display the predictions in chart
-		console.log(results)
+		$("#predict-button").click(async function () {
+			// get image data from canvas
+			console.log("in predict function")
+			var imageData = canvas.toDataURL();
+
+			// preprocess canvas
+			let tensor = preprocessCanvas(canvas);
+			
+			console.log(tensor);
+			// make predictions on the preprocessed image tensor
+			let predictions = await model.predict(tensor).data();
+
+			console.log(predictions);
+		
+			// get the model's prediction results
+			let results = Array.from(predictions);
+		
+			displayLabel(results)
+			// display the predictions in chart
+			console.log(results)
+		});
+		$("#clear-button").click(async function () {
+		ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+		clickX = new Array();
+		clickY = new Array();
+		clickD = new Array();
+		$(".prediction-text").empty();
+		$("#result_box").addClass('d-none');
 	});
-		
-		function erase()
-		{
-			console.log("erase button clicked");
-			ctx.clearRect(0, 0, w, h);
-
-		}
-
 		async function loadModel() {
 			console.log("in load model function")
 			// clear the model variable
 			model = undefined; 
 			// load the model using a HTTPS request (where you have stored your model files)
-			model = await tf.loadLayersModel("/models/model.json");
+			model = await tf.loadLayersModel("static/models/model.json");
 		}
  
 		loadModel();
@@ -137,17 +220,19 @@
 		}
 
 		function displayLabel(data) {
-    var max = data[0];
-    var maxIndex = 0;
- 
-    for (var i = 1; i < data.length; i++) {
-        if (data[i] > max) {
-            maxIndex = i;
-            max = data[i];
-        }
-    }
-    $("prediction-text").html("Predicting you draw <b>"+maxIndex+"</b> with <b>"+Math.trunc( max*100 )+"%</b> confidence")
-}
+			var max = data[0];
+			var maxIndex = 0;
+		
+			for (var i = 1; i < data.length; i++) {
+				if (data[i] > max) {
+					maxIndex = i;
+					max = data[i];
+				}
+			}
+
+			console.log(maxIndex);
+			document.getElementById("prediction-text").innerHTML = maxIndex;
+		}
 	</script>
 	
 	
