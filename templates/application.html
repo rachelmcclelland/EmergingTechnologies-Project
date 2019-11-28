@@ -52,6 +52,7 @@
  
 		ctx = canvas.getContext("2d");
 			
+		// function for when a mouse is clicked
 		$("#canvas").mousedown(function(e) {
 			var rect = canvas.getBoundingClientRect();
 			var mouseX = e.clientX- rect.left;;
@@ -62,6 +63,7 @@
 		});
  
 
+		// function for mouse moving
 		$("#canvas").mousemove(function(e) {
 			if(drawing) {
 				var rect = canvas.getBoundingClientRect();
@@ -78,9 +80,7 @@
 		});
 		
 		
-		//----------------------
-		// MOUSE LEAVE function
-		//----------------------
+		// function of when the mouse is released and moved outside the canvas
 		$("#canvas").mouseleave(function(e) {
 			drawing = false;
 		});
