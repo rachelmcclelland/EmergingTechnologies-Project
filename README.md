@@ -22,3 +22,5 @@ https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse
 
 https://github.com/SamArgt/Mnist-flask-Tensorflow/blob/master/app.py
 https://stackoverflow.com/a/48334563
+https://bensonruan.com/handwritten-digit-recognition-with-tensorflow-js/
+https://www.w3schools.com/jquery/jquery_ref_events.asp

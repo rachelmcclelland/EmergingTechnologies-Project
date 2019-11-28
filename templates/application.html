@@ -19,9 +19,9 @@
     </body>
 	<script type="text/javascript">
 		let model;
-		var canvasWidth = 250;
-		var canvasHeight = 250;
-		var canvasStrokeStyle = "red";
+		var canvasWidth = 400;
+		var canvasHeight = 400;
+		var canvasStrokeStyle = "white";
 		var canvasLineJoin = "round";
 		var canvasLineWidth = 10;
 		var canvasBackgroundColor = "black";
@@ -34,6 +34,8 @@
 		var x = "black";
 		// variable for how think the line is
 		var lineThickness = 3;
+
+		// create the canvas
 		var canvasBox = document.getElementById('canvas_box');
 		var canvas    = document.createElement("canvas");
 		
@@ -59,23 +61,6 @@
 			drawOnCanvas();
 		});
  
-		canvas.addEventListener("touchstart", function (e) {
-			if (e.target == canvas) {
-				e.preventDefault();
-			}
-		
-			var rect = canvas.getBoundingClientRect();
-			var touch = e.touches[0];
-		
-			var mouseX = touch.clientX - rect.left;
-			var mouseY = touch.clientY - rect.top;
-		
-			drawing = true;
-			addUserGesture(mouseX, mouseY);
-			drawOnCanvas();
-		
-		}, false);
- 
 
 		$("#canvas").mousemove(function(e) {
 			if(drawing) {
@@ -86,39 +71,12 @@
 				drawOnCanvas();
 			}
 		});
-
-		canvas.addEventListener("touchmove", function (e) {
-			if (e.target == canvas) {
-				e.preventDefault();
-			}
-			if(drawing) {
-				var rect = canvas.getBoundingClientRect();
-				var touch = e.touches[0];
 		
-				var mouseX = touch.clientX - rect.left;
-				var mouseY = touch.clientY - rect.top;
-		
-				addUserGesture(mouseX, mouseY, true);
-				drawOnCanvas();
-			}
-		}, false);
-		
-		//-------------------
-		// MOUSE UP function
-		//-------------------
+		// function for mouse movement upwards
 		$("#canvas").mouseup(function(e) {
 			drawing = false;
 		});
 		
-		//---------------------
-		// TOUCH END function
-		//---------------------
-		canvas.addEventListener("touchend", function (e) {
-			if (e.target == canvas) {
-				e.preventDefault();
-			}
-			drawing = false;
-		}, false);
 		
 		//----------------------
 		// MOUSE LEAVE function
@@ -127,15 +85,6 @@
 			drawing = false;
 		});
 		
-		//-----------------------
-		// TOUCH LEAVE function
-		//-----------------------
-		canvas.addEventListener("touchleave", function (e) {
-			if (e.target == canvas) {
-				e.preventDefault();
-			}
-			drawing = false;
-		}, false);
 		
 		//--------------------
 		// ADD CLICK function
