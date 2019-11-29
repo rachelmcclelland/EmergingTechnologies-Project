@@ -5,7 +5,6 @@
 	</head>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-
 	<!-- Adapted from https://bensonruan.com/handwritten-digit-recognition-with-tensorflow-js/ -->
     <body>
         <!-- <canvas id="can" width="200" height="200" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas> -->
@@ -16,158 +15,14 @@
 
 		<p id = "prediction-text" style = "position:absolute; top:90%; left: 15%">Predictions:  </p>
 
-    </body>
+
+		<script src="../static/javascript/draw_on_canvas.js"></script>	
+		<script src = "../static/javascript/predict_number.js"></script>	
+	</body>
+
 	<script type="text/javascript">
-		let model;
-		var canvasWidth = 400;
-		var canvasHeight = 400;
-		var canvasStrokeStyle = "white";
-		var canvasLineJoin = "round";
-		var canvasLineWidth = 10;
-		var canvasBackgroundColor = "black";
-		var canvasId = "canvas";
-		var clickX = new Array();
-		var clickY = new Array();
-		var clickD = new Array();
-		var drawing;
-
-		var x = "black";
-		// variable for how think the line is
-		var lineThickness = 3;
-
-		// create the canvas
-		var canvasBox = document.getElementById('canvas_box');
-		var canvas    = document.createElement("canvas");
-		
-		canvas.setAttribute("width", canvasWidth);
-		canvas.setAttribute("height", canvasHeight);
-		canvas.setAttribute("id", canvasId);
-		canvas.style.backgroundColor = canvasBackgroundColor;
-		canvasBox.appendChild(canvas);
-
-		// checks is browser supports html 
-		if(typeof G_vmlCanvasManager != 'undefined') {
-			canvas = G_vmlCanvasManager.initElement(canvas);
-		}
- 
-		ctx = canvas.getContext("2d");
 			
-		// function for when a mouse is clicked
-		$("#canvas").mousedown(function(e) {
-			var rect = canvas.getBoundingClientRect();
-			var mouseX = e.clientX- rect.left;;
-			var mouseY = e.clientY- rect.top;
-			drawing = true;
-			addUserGesture(mouseX, mouseY);
-			drawOnCanvas();
-		});
- 
-
-		// function for mouse moving
-		$("#canvas").mousemove(function(e) {
-			if(drawing) {
-				var rect = canvas.getBoundingClientRect();
-				var mouseX = e.clientX- rect.left;;
-				var mouseY = e.clientY- rect.top;
-				addUserGesture(mouseX, mouseY, true);
-				drawOnCanvas();
-			}
-		});
 		
-		// function for mouse movement upwards
-		$("#canvas").mouseup(function(e) {
-			drawing = false;
-		});
-		
-		
-		// function of when the mouse is released and moved outside the canvas
-		$("#canvas").mouseleave(function(e) {
-			drawing = false;
-		});
-		
-		
-		//--------------------
-		// ADD CLICK function
-		//--------------------
-		function addUserGesture(x, y, dragging) {
-			clickX.push(x);
-			clickY.push(y);
-			clickD.push(dragging);
-		}
-		
-		//-------------------
-		// RE DRAW function
-		//-------------------
-		function drawOnCanvas() {
-			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		
-			ctx.strokeStyle = canvasStrokeStyle;
-			ctx.lineJoin    = canvasLineJoin;
-			ctx.lineWidth   = canvasLineWidth;
-		
-			for (var i = 0; i < clickX.length; i++) {
-				ctx.beginPath();
-				if(clickD[i] && i) {
-					ctx.moveTo(clickX[i-1], clickY[i-1]);
-				} else {
-					ctx.moveTo(clickX[i]-1, clickY[i]);
-				}
-				ctx.lineTo(clickX[i], clickY[i]);
-				ctx.closePath();
-				ctx.stroke();
-			}
-		}
-		
-		$("#predict-button").click(async function () {
-			// get image data from canvas
-			console.log("in predict function")
-			var imageData = canvas.toDataURL();
-
-			// preprocess canvas
-			let tensor = preprocessCanvas(canvas);
-			
-			console.log(tensor);
-			// make predictions on the preprocessed image tensor
-			let predictions = await model.predict(tensor).data();
-
-			console.log(predictions);
-		
-			// get the model's prediction results
-			let results = Array.from(predictions);
-		
-			displayLabel(results)
-			// display the predictions in chart
-			console.log(results)
-		});
-		$("#clear-button").click(async function () {
-		ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-		clickX = new Array();
-		clickY = new Array();
-		clickD = new Array();
-		$(".prediction-text").empty();
-		$("#result_box").addClass('d-none');
-	});
-		async function loadModel() {
-			console.log("in load model function")
-			// clear the model variable
-			model = undefined; 
-			// load the model using a HTTPS request (where you have stored your model files)
-			model = await tf.loadLayersModel("static/models/model.json");
-		}
- 
-		loadModel();
-
-		function preprocessCanvas(image) {
-			// resize the input image to target size of (1, 28, 28)
-			let tensor = tf.browser.fromPixels(image)
-				.resizeNearestNeighbor([28, 28])
-				.mean(2)
-				.expandDims(2)
-				.expandDims()
-				.toFloat();
-			return tensor.div(255.0);
-		}
-
 		function displayLabel(data) {
 			var max = data[0];
 			var maxIndex = 0;
