@@ -1,6 +1,6 @@
 let model;
-var canvasWidth = 400;
-var canvasHeight = 400;
+var canvasWidth = 300;
+var canvasHeight = 300;
 var canvasStrokeStyle = "white";
 var canvasLineJoin = "round";
 var canvasLineWidth = 10;

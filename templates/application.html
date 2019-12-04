@@ -7,12 +7,14 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
 
-    <body>
+    <body style="background-color:#bee2ed;">
+		<h2>Handwritten Digit Recognition Application</h2>
+		<h3>By: Rachel McClelland - G00337231</h3>
 		<div id="canvas_box" class="canvas-box"></div>
-		<button id="predict-button" class="btn btn-dark" style = "position:absolute; top:80%; left: 15%">Predict</button>
-		<button id="clear-button" style = "position:absolute; top:80%; left: 10%">Clear</button>
+		<button id="predict-button" class="button" style = "position:absolute; top:20% ;left: 40%">Predict</button>
+		<button id="clear-button" class = "button" style = "position:absolute; top:30%; left: 40%">Clear</button>
 
-		<p id = "prediction-text" style = "position:absolute; top:90%; left: 15%">Predictions:  </p>
+		<p id = "prediction-text" class = "answer" style = "position:absolute; top:40%; left: 40%"> Hello  </p>
 
 
 		<script src="../static/javascript/draw_on_canvas.js"></script>	
@@ -34,7 +36,7 @@
 			}
 
 			console.log(maxIndex);
-			document.getElementById("prediction-text").innerHTML = maxIndex;
+			document.getElementById("prediction-text").innerHTML = "Predicted you drew: " + maxIndex;
 		}
 	</script>
 	

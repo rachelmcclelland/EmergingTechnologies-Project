@@ -1,0 +1,20 @@
+body{
+  background-color: #d11bc5;
+}
+
+.button {
+    background-color: #1e094e;
+    border: none;
+    color: white;
+    padding: 25px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10%;
+    margin-left: 10%;
+    margin-top: 10%;
+}
+
+p{
+  font-size: 2.5em;
+}
