@@ -17,6 +17,9 @@ for Flask to find it. I had originally called it static and after changing it, e
 set FLASK_APP=webapp.py
 flask run
 
+##Demo
+![demo](https://github.com/rachelmcclelland/EmergingTechnologiesProject/blob/master/assets/gifs/appsample.gif)
+
 ## Refereneces
 https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse
 
