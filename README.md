@@ -17,7 +17,7 @@ for Flask to find it. I had originally called it static and after changing it, e
 set FLASK_APP=webapp.py
 flask run
 
-##Demo
+## Demo
 ![demo](/assets/gifs/appsample.gif)
 
 ## Refereneces
