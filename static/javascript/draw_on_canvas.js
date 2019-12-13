@@ -65,6 +65,61 @@ $("#canvas").mouseleave(function(e) {
     drawing = false;
 });
 
+// Drawing on a mobile device
+canvas.addEventListener("touchstart", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+
+    var rect = canvas.getBoundingClientRect();
+    var touch = e.touches[0];
+
+    var mouseX = touch.clientX - rect.left;
+    var mouseY = touch.clientY - rect.top;
+
+    drawing = true;
+    addUserGesture(mouseX, mouseY);
+    drawOnCanvas();
+
+}, false);
+
+canvas.addEventListener("touchmove", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+    if(drawing) {
+        var rect = canvas.getBoundingClientRect();
+        var touch = e.touches[0];
+
+        var mouseX = touch.clientX - rect.left;
+        var mouseY = touch.clientY - rect.top;
+
+        addUserGesture(mouseX, mouseY, true);
+        drawOnCanvas();
+    }
+}, false);
+
+//---------------------
+// TOUCH END function
+//---------------------
+canvas.addEventListener("touchend", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+    drawing = false;
+}, false);
+
+//-----------------------
+// TOUCH LEAVE function
+//-----------------------
+canvas.addEventListener("touchleave", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+    drawing = false;
+}, false);
+
+
 
 //--------------------
 // ADD CLICK function
