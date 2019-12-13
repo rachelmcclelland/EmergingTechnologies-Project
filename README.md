@@ -1,5 +1,10 @@
 # EmergingTechnologies-Project
 
+## Overview
+This application uses the popular Mnist database that is found online to predict user input of a single digit using Python, Flask, Jupyter and Keras. The model is trained from a 60 000 dataset using jupyter notebook which is used in the back end with javascript to predict what number it was the user entered on the web application on the front end. 
+
+Originally the model was unzipping the files from the mnist website that I had downloaded to train the model but later I had changed it to the model retrieving the files from the website itself as it worked better with my project and prevented me from running into any more errors relating to the reshaping of the image for prediciting.
+
 ## mnistreader-c
 This file contains a C program to read in and output data from the mnist training files and their corresponding labels.
 Currently the file only reads in the first three numbers and first three labels from each file as it is 
