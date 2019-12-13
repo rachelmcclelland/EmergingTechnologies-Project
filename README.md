@@ -51,6 +51,8 @@ Helped with issues relating to error when file was in the incorrect folder - htt
 Demo on how to predict hand drawn numbers - 
 https://bensonruan.com/handwritten-digit-recognition-with-tensorflow-js/
 
+Convolutional Neural Networks: A Python Tutorial Using TensorFlow and Keras - https://www.kdnuggets.com/2019/07/convolutional-neural-networks-python-tutorial-tensorflow-keras.html
+
 https://www.w3schools.com/jquery/jquery_ref_events.asp
 
 Help with editing a markdown file - 
