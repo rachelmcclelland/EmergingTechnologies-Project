@@ -17,8 +17,21 @@ for Flask to find it. I had originally called it static and after changing it, e
 
 ### How to run Flask
 *In the command prompt*
-set FLASK_APP=webapp.py
-flask run
+* Navigate to the location the file is in on the command prompty
+* set FLASK_APP=webapp.py
+* flask run
+
+**Alternatively it can be run with**
+* python application.html
+
+### How to use application
+* open any web browser and navigate to http://localhost:5000
+* using your mouse, right click and drag it across the black square to write a number
+* click 'predict' to find out what the answer is
+
+* click 'clear' if you have made a mistake or want to try again
+
+*This application can also work on mobile as it contains javascript could to detect touch.*
 
 ## Demo
 ![demo](/assets/gifs/appsample.gif)
