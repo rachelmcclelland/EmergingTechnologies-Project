@@ -6,16 +6,32 @@ Currently the file only reads in the first three numbers and first three labels 
 just a test program to attempt to see what the files look like.
 
 ## Flask - webapp.py
+This file is used for running the server. It contains python code that runs. It uses the Flask python package to run the application which allows us to view the app in a web browser.
 
 ### Issues
-Error message jinja2.exceptions.TemplateNotFound appeared when trying to load the html page 
-Google answer and found that the folder holding the application.html file must be called templates
-for Flask to find it. I had originally called it static and after changing it, error was gone
+1. Error message jinja2.exceptions.TemplateNotFound appeared when trying to load the html page 
+Googled answer and found that the folder holding the application.html file must be called templates
+for Flask to find it. I had originally called it static and after changing it, error was gone.
+
+2. I had a few issues with reshaping the data in the mnist file to match what the input from the user was so that it can be compared. The issue was related to a four dimensional array being used in the javascript file while it was only being reshaped to a three dimensional array in the python notebook. I had resoved this issue by researching the topic and found [this](https://bensonruan.com/handwritten-digit-recognition-with-tensorflow-js/) website that used 4 dimensional array in its python code. After adpating this code into my project, the issue was resolved.
 
 ### How to run Flask
 *In the command prompt*
-set FLASK_APP=webapp.py
-flask run
+* Navigate to the location the file is in on the command prompty
+* set FLASK_APP=webapp.py
+* flask run
+
+**Alternatively it can be run with**
+* python application.html
+
+### How to use application
+* open any web browser and navigate to http://localhost:5000
+* using your mouse, right click and drag it across the black square to write a number
+* click 'predict' to find out what the answer is
+
+* click 'clear' if you have made a mistake or want to try again
+
+*This application can also work on mobile as it contains javascript could to detect touch.*
 
 ## Demo
 ![demo](/assets/gifs/appsample.gif)
