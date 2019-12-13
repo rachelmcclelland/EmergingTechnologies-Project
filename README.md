@@ -40,6 +40,13 @@ for Flask to find it. I had originally called it static and after changing it, e
 https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse
 
 https://github.com/SamArgt/Mnist-flask-Tensorflow/blob/master/app.py
-https://stackoverflow.com/a/48334563
+
+Helped with issues relating to error when file was in the incorrect folder - https://stackoverflow.com/a/48334563
+
+Demo on how to predict hand drawn numbers - 
 https://bensonruan.com/handwritten-digit-recognition-with-tensorflow-js/
+
 https://www.w3schools.com/jquery/jquery_ref_events.asp
+
+Help with editing a markdown file - 
+https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
