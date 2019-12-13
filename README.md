@@ -1,5 +1,10 @@
 # EmergingTechnologies-Project
 
+## Overview
+This application uses the popular Mnist database that is found online to predict user input of a single digit using Python, Flask, Jupyter and Keras. The model is trained from a 60 000 dataset using jupyter notebook which is used in the back end with javascript to predict what number it was the user entered on the web application on the front end. 
+
+Originally the model was unzipping the files from the mnist website that I had downloaded to train the model but later I had changed it to the model retrieving the files from the website itself as it worked better with my project and prevented me from running into any more errors relating to the reshaping of the image for prediciting.
+
 ## mnistreader-c
 This file contains a C program to read in and output data from the mnist training files and their corresponding labels.
 Currently the file only reads in the first three numbers and first three labels from each file as it is 
@@ -40,6 +45,15 @@ for Flask to find it. I had originally called it static and after changing it, e
 https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse
 
 https://github.com/SamArgt/Mnist-flask-Tensorflow/blob/master/app.py
-https://stackoverflow.com/a/48334563
+
+Helped with issues relating to error when file was in the incorrect folder - https://stackoverflow.com/a/48334563
+
+Demo on how to predict hand drawn numbers - 
 https://bensonruan.com/handwritten-digit-recognition-with-tensorflow-js/
+
+Convolutional Neural Networks: A Python Tutorial Using TensorFlow and Keras - https://www.kdnuggets.com/2019/07/convolutional-neural-networks-python-tutorial-tensorflow-keras.html
+
 https://www.w3schools.com/jquery/jquery_ref_events.asp
+
+Help with editing a markdown file - 
+https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
